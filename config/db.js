@@ -3,16 +3,13 @@ import mongoose from "mongoose";
 const conectarDB = async () => {
     try {
         const db = await mongoose.connect(process.env.MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
             socketTimeoutMS: 30000, // Aumenta el tiempo de espera a 30 segundos
-        })
-
-        const url = `${db.connection.host}:${db.connection.port}`
-        console.log(`MongoDB conectado en: ${url}`)
+        });
+        const url = `${db.connection.host}:${db.connection.port}`;
+        console.log(`MongoDB conectado en: ${url}`);
     } catch (error) {
-        console.log(`error: ${error.message}`)
-        process.exit(1)
+        console.log(`Error al conectar a MongoDB: ${error.message}`);
+        process.exit(1);
     }
 }
 
