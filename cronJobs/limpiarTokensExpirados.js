@@ -4,14 +4,20 @@ import Veterinario from '../models/Veterinario.js';
 const limpiarTokensExpirados = async () => {
     try {
         const ahora = new Date();
-        const resultado = await Veterinario.updateMany(
-            { tokenExpiracion: { $lt: ahora } }, // Tokens expirados
-            { $set: { token: null, tokenExpiracion: null } } // Eliminar token
-        )
+        const batchSize = 100; // Tamaño del lote
+        let documentosActualizados;
 
-        console.log(`Tokens expirados eliminados: ${resultado.modifiedCount}`)
+        do {
+            documentosActualizados = await Veterinario.updateMany(
+                { tokenExpiracion: { $lt: ahora } }, // Tokens expirados
+                { $set: { token: null, tokenExpiracion: null } }, // Eliminar token
+                { limit: batchSize } // Procesar en lotes
+            );
+
+            console.log(`Tokens expirados eliminados: ${documentosActualizados.modifiedCount}`);
+        } while (documentosActualizados.modifiedCount > 0);
     } catch (error) {
-        console.error("Error al limpiar tokens expirados:", error)
+        console.error("Error al limpiar tokens expirados:", error);
     }
 }
 

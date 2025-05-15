@@ -33,7 +33,8 @@ const veterinarioSchema = mongoose.Schema({
     },
     tokenExpiracion: {
         type: Date,
-        default: () => new Date(Date.now() + 3600000) // 1 hr
+        default: () => new Date(Date.now() + 3600000), // 1 hr
+        index: true, // Agrega un índice
     },
     confirmado: {
         type: Boolean,
